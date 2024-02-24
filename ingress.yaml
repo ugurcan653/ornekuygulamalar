@@ -3,9 +3,8 @@ kind: Ingress
 metadata:
   name: ingress
 spec:
-  ingressClassName: nginx
   rules:
-  - host: 123A960D6EBFD56D70766C808A231BA3.gr7.eu-west-1.eks.amazonaws.com
+  - host: ""
     http:
       paths:
       - path: /
