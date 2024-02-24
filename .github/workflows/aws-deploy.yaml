@@ -23,4 +23,4 @@ jobs:
       run: |
         aws configure set region eu-west-1
         aws eks --region eu-west-1 update-kubeconfig --name bitirmeprojesi_eks
-        kubectl apply -f ./react-express-mongodb/k8s/
+        kubectl apply -f .
