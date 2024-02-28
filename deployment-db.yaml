@@ -9,7 +9,7 @@ spec:
     - protocol: TCP
       port: 27017
       targetPort: 27017
-  type: NodePort
+  type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -32,20 +32,20 @@ spec:
         app: mongodb
     spec:
       containers:
-        - name: mongodb
-          image: mongo:4.2.0
-          ports:
-            - containerPort: 27017
-          volumeMounts:
-            - mountPath: /data/db
-              name: mongo-pv
-          resources:
-            limits:
-              memory: "1Gi"
-              cpu: "1000m"
-            requests:
-              memory: "256Mi"
-              cpu: "500m"
+      - name: mongodb
+        image: mongo:4.2.0
+        ports:
+          - containerPort: 27017
+        volumeMounts:
+          - mountPath: /data/db
+            name: mongo-pv
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+          requests:
+            memory: "256Mi"
+            cpu: "500m"
       volumes:
         - name: mongo-pv
           persistentVolumeClaim:
@@ -66,22 +66,19 @@ spec:
   persistentVolumeReclaimPolicy: Recycle
   storageClassName: gp2
   hostPath:
-    path: /home/ec2-user/data/
-    type: DirectoryOrCreate
+    path: /mnt/k8s/mongo
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mongo-pvc
 spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
   resources:
     requests:
       storage: 10Gi
-  volumeName: mongo-pv
-  storageClassName: ""
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
+  selector:
+    matchLabels: 
+      app: mongodb
