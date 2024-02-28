@@ -66,16 +66,22 @@ spec:
   persistentVolumeReclaimPolicy: Recycle
   storageClassName: standard
   hostPath:
-    path: /mnt/k8s/mongo
+    path: /home/ec2-user/data/
+    type: DirectoryOrCreate
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mongo-pvc
 spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
   resources:
     requests:
       storage: 10Gi
+  volumeName: mongo-pv
+  storageClassName: ""
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
